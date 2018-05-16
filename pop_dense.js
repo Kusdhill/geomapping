@@ -12,17 +12,11 @@ var svg = d3.select("body")
 d3.json("israel.json", function(error, json) {
 	if (error) throw error;
 
-	var conus = topojson.feature(json, {
-		type: "GeometryCollection"
-	});
+	var projection = d3.geoMercator()
+		.fitSize([width, height], json);
 
-
-	// Define projection
-	var projection = d3.geoAlbers()
-		.fitSize([width,height], conus);
-
-	//Define path generator
-	var path = d3.geoPath(projection)
+	var path = d3.geoPath()
+		.projection(projection);
 
 
 	//Bind data and create one path per GeoJSON feature
