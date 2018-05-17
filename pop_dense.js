@@ -24,11 +24,11 @@ var x = d3.scaleSqrt()
 	.domain([0, 10])
 	.rangeRound([440, 950]);
 
-//Legend location
+//Population density legend location
 var g = svg.append("g")
 	.attr("class", "key")
 	.attr("transform", "translate(100,40)");
-//Legend rectangle and colors
+//Population density legend rectangle and colors
 g.selectAll("rect")
 	.data(color.range().map(function(d) {
 		d = color.invertExtent(d);
@@ -50,6 +50,40 @@ g.append("text")
 	.attr("text-anchor", "start")
 	.attr("font-weight", "bold")
 	.text("Population per square kilometer");
+//Legend ticks
+g.call(d3.axisBottom(x)
+	.tickSize(13)
+	.tickValues(color.domain()))
+	.select(".domain")
+	.remove();
+
+
+//Population density legend location
+var g = svg.append("g")
+	.attr("class", "key")
+	.attr("transform", "translate(100,90)");
+//Population density legend rectangle and colors
+g.selectAll("rect")
+	.data(color.range().map(function(d) {
+		d = color.invertExtent(d);
+		if (d[0] == null) d[0] = x.domain()[0];
+		if (d[1] == null) d[1] = x.domain()[1];
+		return d;
+	}))	
+	.enter().append("rect")
+	.attr("height", 8)
+	.attr("x", function(d) { return x(d[0]); })
+	.attr("width", function(d) { return x(d[1]) - x(d[0]); })
+	.attr("fill", function(d) { return color(d[0]); });
+//Legend text
+g.append("text")
+	.attr("class", "caption")
+	.attr("x", x.range()[0])
+	.attr("y", -6)
+	.attr("fill", "#000")
+	.attr("text-anchor", "start")
+	.attr("font-weight", "bold")
+	.text("Arabic population");
 //Legend ticks
 g.call(d3.axisBottom(x)
 	.tickSize(13)
